@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		.box1{
+			margin: 0px;padding:5px;
+			height: 300px;
+			background-color:#ddd ; 
+			position: relative;
+		}
+		button{margin5px;}
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 40px;
+        }
+        .box3 {
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            position: absolute;
+            left: 0;
+            top: 150px;
+        }
+	</style>
+</head>
+<body>
+<div class="box1">
+	<button>移动到200</button>
+	<button>移动400</button>
+	<button>还原</button>
+	<div class="box2"></div>
+	<div class="box3"></div>
+</div>
+	<script type="text/javascript">
+		var btn=document.getElementsByTagName('button');
+		var box2=document.getElementsByClassName('box2')[0];
+		var box3=document.getElementsByClassName('box3')[0];
+		var timer=null;
+		btn[0].onclick=function(){
+			animate(box2,200);
+			animate(box3,200);
+		}
+		btn[1].onclick=function(){
+			animate(box2,400);
+			animate(box3,400);
+		}
+		btn[2].onclick=function(){
+			animate(box2,0);
+			animate(box3,0);
+		}
+		//使用定时器操作，先清除定时器
+		function animate(ele,target){
+			clearInterval(ele,timer);
+			//确定步长,左移或者右移
+			var speed=target>ele.offsetLeft?10:-10;
+			ele.timer=setInterval(function () {
+				var val=target-ele.offsetLeft;
+				//style操作属性
+				ele.style.left=ele.offsetLeft+speed+"px";
+				if(Math.abs(val)<Math.abs(speed)||target==0){
+					ele.style.left=target+"px";
+					clearInterval(ele.timer);
+				}
+			},30);
+		}
+	</script>
+</body>
+</html>

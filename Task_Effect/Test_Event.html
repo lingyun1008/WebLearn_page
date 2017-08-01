@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<button>赋值</button>
+	<script type="text/javascript">
+		document.onclick=function(event){
+			// 兼容写法
+			event=event || window.event;
+			console.log(event);//所有事件
+			console.log(event.timeStamp);//
+			console.log(event.bubbles);
+			console.log(event.button);
+			console.log(event.pageX);//页面位置
+			console.log(event.pageY);
+			console.log(event.scrollX);
+			console.log(event.scrollY);
+			console.log(event.target);
+			console.log(event.type);
+			console.log(event.clientX);
+			console.log(event.clientY);//整体位置
+			console.log();
+
+
+		}
+		// 事件的监听
+		var btn=document.getElementsByTagName("button")[0];
+		EventListen = {
+	        addEvent: function (ele,fn,str) {
+	            //通过判断调用的方式兼容IE678
+	            //判断浏览器是否支持该方法，如果支持那么调用，如果不支持换其他方法
+	            if(ele.addEventListener){
+	                //直接调用
+	                ele.addEventListener(str,fn);
+	            }else if(ele.attachEvent){
+	                ele.attachEvent("on"+str,fn);
+	            }else{
+	                //在addEventListener和attachEvent都不存在的情况下，用此代码
+	                ele["on"+str] = fn;
+	            }
+	        },//解绑事件
+	        removeEvent:function(ele,fn,str){
+	        	if(ele.addEventListener){
+	        		ele.removeEventListener(str,fn);
+	        	}else if(ele.detachEvent){
+	        		ele.detachEvent("on"+str,fn)
+	        	}else{
+	        		ele["on"+str]=fn;
+	        	}
+	        }
+	    }
+
+	//    btn.addEventListener("click",fn);
+	    EventListen.addEvent(btn,fn1,"click");
+	    EventListen.removeEvent(btn,fn2,"click");
+	    function fn1(){
+	        alert(1);
+	    }
+	    function fn2(){
+	        console.log(2);
+	    };
+	</script>
+</body>
+</html>
