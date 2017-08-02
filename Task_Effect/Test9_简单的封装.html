@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        ul{list-style: none}
+        *{margin:0; padding:0;}
+        div{
+            width: 1150px;
+            height: 400px;
+            margin:50px auto;
+            border:1px solid red;
+            overflow: hidden;
+
+        }
+        div li {
+            width: 240px;
+            height: 400px;
+            float: left;
+        }
+        div ul {
+            width: 1300px;
+        }
+    </style>
+    <script>
+        /**
+         * 简单的封装
+         */
+         //元素隐藏显示
+        function show(ele){
+            ele.style.display = "block";
+        }
+        function hide(ele){
+            ele.style.display = "none";
+        }
+
+        /**
+         * 获取元素样式兼容写法
+         * @param ele
+         * @param attr
+         * @returns {*}
+         */
+        function getStyle(ele,attr){
+            if(window.getComputedStyle){
+                return window.getComputedStyle(ele,null)[attr];
+            }
+            return ele.currentStyle[attr];
+        }
+
+        //参数为3个的缓动动画封装
+        function animate(ele,json,fn){
+            //先清定时器
+            clearInterval(ele.timer);
+            ele.timer = setInterval(function () {
+                //开闭原则
+                var bool = true;
+
+
+                //遍历属性和值，分别单独处理json
+                //attr == k(键)    target == json[k](值)
+                for(var k in json){
+                    //四部
+                    var leader = parseInt(getStyle(ele,k)) || 0;
+                    //1.获取步长
+                    var step = (json[k] - leader)/10;
+                    //2.二次加工步长
+                    step = step>0?Math.ceil(step):Math.floor(step);
+                    leader = leader + step;
+                    //3.赋值
+                    ele.style[k] = leader + "px";
+                    //4.清除定时器
+                    //判断: 目标值和当前值的差大于步长，就不能跳出循环
+                    //不考虑小数的情况：目标位置和当前位置不相等，就不能清除清除定时器。
+                    if(json[k] !== leader){
+                        bool = false;
+                    }
+                }
+
+                console.log(1);
+                //只有所有的属性都到了指定位置，bool值才不会变成false；
+                if(bool){
+                    clearInterval(ele.timer);
+                    //所有程序执行完毕了，现在可以执行回调函数了
+                    //只有传递了回调函数，才能执行
+                    if(fn){
+                        fn();
+                    }
+                }
+            },1);
+        }
+
+
+
+        //获取屏幕可视区域的宽高
+        function client(){
+            if(window.innerHeight !== undefined){
+                return {
+                    "width": window.innerWidth,
+                    "height": window.innerHeight
+                }
+            }else if(document.compatMode === "CSS1Compat"){
+                return {
+                    "width": document.documentElement.clientWidth,
+                    "height": document.documentElement.clientHeight
+                }
+            }else{
+                return {
+                    "width": document.body.clientWidth,
+                    "height": document.body.clientHeight
+                }
+            }
+        }
+    </script>
+    <script>
+        window.onload = function () {
+            //需求：鼠标放入到li中该盒子变宽，其他的盒子变窄。移开大盒子，回复原样。
+            //步骤：
+            //1.给li添加背景
+            //2.绑定onmouseover事件，鼠标放入到li中该盒子变宽，其他的盒子变窄
+            //3.移开大盒子，回复原样
+
+
+            var div = document.getElementsByTagName("div")[0];
+            var liArr = div.getElementsByTagName("li");
+            //1.给li添加背景
+            for(var i=0;i<liArr.length;i++){
+                liArr[i].style.background = "url(images/"+(i+1)+".jpg) no-repeat";
+
+                //2.绑定onmouseover事件，鼠标放入到li中该盒子变宽，其他的盒子变窄
+                liArr[i].onmouseover = function () {
+                    //排他思想
+                    for(var j=0;j<liArr.length;j++){
+                        //引用框架实现宽度变窄
+                        animate(liArr[j],{"width":100});
+                    }
+                    //剩下他自己
+                    animate(this,{"width":800})
+                }
+            }
+
+            //3.移开大盒子，回复原样
+            div.onmouseout = function () {
+                for(var j=0;j<liArr.length;j++){
+                    //引用框架实现宽度变窄
+                    animate(liArr[j],{"width":240});
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		li{
+			list-style: none;
+			height: 30px;
+			line-height: 30px;
+			margin: 3px;
+			background-color: #ccc;
+			cursor: pointer;; 
+		}
+	</style>
+</head>
+<body>
+	<button>添加移民li</button>
+	<ul>
+		<li>我是土著li标签</li>
+		<a href="#">我是a</a>
+		<li>我是土著li标签</li>
+		<li>我是土著li标签</li>
+		<a href="#">我是a</a>
+		<li>我是土著li标签</li>
+	</ul>
+	<script type="text/javascript">
+		var liArr=document.getElementsByTagName("li");
+		var ul=document.getElementsByTagName('ul')[0];
+		var btn=document.getElementsByTagName('button')[0];
+		//使用冒泡的特性进行事件委托
+		btn.onclick=function(){
+			for(var i=0;i<5;i++){
+				var newLi=document.createElement("li");
+				newLi.innerHTML="我是移民li";
+				ul.appendChild(newLi);
+			}
+		}
+		ul.onclick=function(event){
+			event=event || window.event;
+			var aaa=event.target?event.target:event.srcElement;
+			if(aaa.tagName==="LI"){
+				alert("我是li");
+			}
+
+		}
+	</script>
+</body>
+</html>
